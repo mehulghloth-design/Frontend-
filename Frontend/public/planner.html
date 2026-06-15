@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Semester Planner</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header>
+    <h1>Semester Planner</h1>
+</header>
+
+<div class="container">
+    <div class="form-card">
+        <h2>Create Semester Plan</h2>
+
+        <p id="currentUserInfo" style="margin-bottom: 1rem; color: #475569;"></p>
+    <div id="userDebug" style="font-size:0.9rem; color:#6b7280; margin-bottom:0.5rem;"></div>
+
+        <input type="text" id="semesterName" placeholder="Semester Name">
+        <input type="number" id="semesterOrder" placeholder="Semester Order">
+        <input type="number" id="academicYear" placeholder="Academic Year">
+
+        <select id="courseSelect">
+            <option value="">Choose a course</option>
+        </select>
+
+        <button type="button" onclick="addCourseToPlan()">Add Course</button>
+
+        <div id="selectedCourses" style="margin-top: 20px;"></div>
+
+        <p style="margin-top: 1rem;">
+            <strong>Total Selected Credits:</strong>
+            <span id="totalCreditsDisplay">0</span>
+        </p>
+
+        <button type="button" onclick="createPlan()">Save Plan</button>
+
+        <div id="statusMessage" style="margin-top: 15px; font-weight: bold;"></div>
+    </div>
+
+    <div id="plansContainer" class="plans-grid"></div>
+</div>
+
+<script src="js/planner.js"></script>
+</body>
+</html>

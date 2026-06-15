@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Course Planner - Courses</title>
+      <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Academic Course Planner</h1>
+    <p>Search, filter, and explore available courses</p>
+</header>
+
+<div class="container">
+    <div class="top-controls">
+        <input type="text" id="searchInput" placeholder="Search courses by name, code, or description...">
+
+        <select id="departmentFilter">
+            <option value="">All Departments</option>
+            <option value="CSE">CSE</option>
+            <option value="MATH">MATH</option>
+        </select>
+
+        <select id="levelFilter">
+            <option value="">All Levels</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+        </select>
+    </div>
+    
+    <!-- Course details modal -->
+    <div id="courseModalOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:40;"></div>
+    <div id="courseModal" style="display:none; position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; padding:20px; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.25); z-index:50; max-width:720px; width:90%;">
+        <button id="closeCourseModal" style="float:right;">Close</button>
+        <h2 id="modalTitle">Course Title</h2>
+        <p><strong>Code:</strong> <span id="modalCode"></span></p>
+        <p><strong>Credits:</strong> <span id="modalCredits"></span></p>
+        <p><strong>Department:</strong> <span id="modalDept"></span></p>
+        <p><strong>Level:</strong> <span id="modalLevel"></span></p>
+        <p id="modalDesc"></p>
+        <p class="badge">Course ID: <span id="modalId"></span></p>
+    </div>
+
+    <div id="courseList" class="course-grid">
+        <div class="loading">Loading courses...</div>
+    </div>
+    
+    <hr />
+
+    <div class="course-admin">
+        <h2>Manage Courses (admin/demo)</h2>
+        <div id="courseStatus" class="status"></div>
+        <form id="addCourseForm">
+            <input id="newCourseCode" placeholder="Code (e.g. CS500)" required />
+            <input id="newCourseName" placeholder="Name" required />
+            <input id="newCourseCredits" placeholder="Credits" type="number" required />
+            <input id="newCourseDept" placeholder="Department (e.g. CSE)" />
+            <select id="newCourseLevel">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+            </select>
+            <input id="newCourseDesc" placeholder="Short description" />
+            <button type="submit">Add Course</button>
+        </form>
+    </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
