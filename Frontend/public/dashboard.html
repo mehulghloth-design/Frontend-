@@ -37,6 +37,40 @@
     <p>Semester 3</p>
   </div>
 
+  <!-- NODE.JS API DEMO SECTION -->
+  <div class="card" style="grid-column: span 3; margin-top: 20px; text-align: left;">
+    <h3>User Feedback & Reviews (Node.js API Demo)</h3>
+    <p style="font-size: 0.9em; color: #666; margin-bottom: 15px;">
+      This section communicates with the Node.js Express server running on port 3000.
+    </p>
+    
+    <!-- Submit Feedback Form -->
+    <form id="feedbackForm" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px;">
+      <div style="display: flex; gap: 10px;">
+        <input type="text" id="fbName" placeholder="Your Name" required style="padding: 8px; flex: 1; border: 1px solid #ccc; border-radius: 4px;">
+        <input type="email" id="fbEmail" placeholder="Your Email" required style="padding: 8px; flex: 1; border: 1px solid #ccc; border-radius: 4px;">
+        <select id="fbRating" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="5">5 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="2">2 Stars</option>
+          <option value="1">1 Star</option>
+        </select>
+      </div>
+      <textarea id="fbComment" placeholder="Write your feedback here..." required style="padding: 8px; height: 60px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;"></textarea>
+      <button type="submit" style="padding: 10px; background-color: #333; color: white; border: none; border-radius: 4px; cursor: pointer; align-self: flex-start;">Submit Feedback</button>
+    </form>
+
+    <div id="fbErrorMsg" style="color: red; font-size: 0.9em; margin-bottom: 10px;"></div>
+    <div id="fbSuccessMsg" style="color: green; font-size: 0.9em; margin-bottom: 10px;"></div>
+
+    <!-- Feedback List -->
+    <h4>Recent Feedbacks:</h4>
+    <div id="feedbackList" style="display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto;">
+      <!-- JavaScript will insert items here -->
+    </div>
+  </div>
+
 </div>
 <script src="js/app.js"></script>
 </body>

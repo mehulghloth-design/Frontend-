@@ -353,4 +353,129 @@ document.addEventListener("DOMContentLoaded", () => {
     if (departmentFilter) departmentFilter.addEventListener("change", filterCourses);
     if (levelFilter) levelFilter.addEventListener("change", filterCourses);
     if (courseList) fetchCourses();
+
+    // --- NODE.JS FEEDBACK API INTEGRATION ---
+    const NODE_API_URL = "http://localhost:3000";
+    const feedbackForm = document.getElementById("feedbackForm");
+    const feedbackList = document.getElementById("feedbackList");
+    const fbErrorMsg = document.getElementById("fbErrorMsg");
+    const fbSuccessMsg = document.getElementById("fbSuccessMsg");
+
+    async function loadFeedbacks() {
+        if (!feedbackList) return;
+        try {
+            const res = await fetch(`${NODE_API_URL}/api/feedback`);
+            const data = await res.json();
+            if (res.ok && data.status === "success") {
+                displayFeedbacks(data.data);
+            } else {
+                feedbackList.innerHTML = "<p style='color: red;'>Failed to load feedbacks.</p>";
+            }
+        } catch (error) {
+            console.error("Feedback error:", error);
+            feedbackList.innerHTML = "<p style='color: red;'>Node.js server not running on port 3000</p>";
+        }
+    }
+
+    function displayFeedbacks(items) {
+        if (!feedbackList) return;
+        if (items.length === 0) {
+            feedbackList.innerHTML = "<p>No feedback submitted yet.</p>";
+            return;
+        }
+        feedbackList.innerHTML = items.map(fb => `
+            <div style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 5px;">
+                <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                    <span>${escapeHTML(fb.name)} (${escapeHTML(fb.email)})</span>
+                    <span style="color: #ff9800;">${"★".repeat(fb.rating)}${"☆".repeat(5-fb.rating)}</span>
+                </div>
+                <p style="margin: 5px 0;">${escapeHTML(fb.comment)}</p>
+                <div style="display: flex; gap: 10px; font-size: 0.8em;">
+                    <a href="#" onclick="editFeedback(${fb.id}, '${escapeHTML(fb.comment)}', ${fb.rating}); return false;" style="color: blue;">Edit</a>
+                    <a href="#" onclick="deleteFeedback(${fb.id}); return false;" style="color: red;">Delete</a>
+                </div>
+            </div>
+        `).join("");
+    }
+
+    function escapeHTML(str) {
+        return str.replace(/[&<>'"]/g, 
+            tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+        );
+    }
+
+    window.deleteFeedback = async function(id) {
+        if (!confirm("Are you sure you want to delete this feedback?")) return;
+        try {
+            const res = await fetch(`${NODE_API_URL}/api/feedback/${id}`, { method: "DELETE" });
+            const data = await res.json();
+            if (res.ok && data.status === "success") {
+                fbSuccessMsg.innerText = "Feedback deleted successfully!";
+                setTimeout(() => fbSuccessMsg.innerText = "", 3000);
+                loadFeedbacks();
+            } else {
+                fbErrorMsg.innerText = data.message || "Failed to delete feedback";
+            }
+        } catch (error) {
+            fbErrorMsg.innerText = "Failed to communicate with Node.js server";
+        }
+    };
+
+    window.editFeedback = async function(id, currentComment, currentRating) {
+        const newComment = prompt("Edit your comment:", currentComment);
+        if (newComment === null) return;
+        const newRating = prompt("Edit your rating (1-5):", currentRating);
+        if (newRating === null) return;
+
+        try {
+            const res = await fetch(`${NODE_API_URL}/api/feedback/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ comment: newComment, rating: newRating })
+            });
+            const data = await res.json();
+            if (res.ok && data.status === "success") {
+                fbSuccessMsg.innerText = "Feedback updated successfully!";
+                setTimeout(() => fbSuccessMsg.innerText = "", 3000);
+                loadFeedbacks();
+            } else {
+                fbErrorMsg.innerText = data.message || "Failed to update feedback";
+            }
+        } catch (error) {
+            fbErrorMsg.innerText = "Failed to communicate with Node.js server";
+        }
+    };
+
+    if (feedbackForm) {
+        feedbackForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            fbErrorMsg.innerText = "";
+            fbSuccessMsg.innerText = "";
+
+            const name = document.getElementById("fbName").value;
+            const email = document.getElementById("fbEmail").value;
+            const comment = document.getElementById("fbComment").value;
+            const rating = document.getElementById("fbRating").value;
+
+            try {
+                const res = await fetch(`${NODE_API_URL}/api/feedback`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, email, comment, rating })
+                });
+                const data = await res.json();
+                if (res.ok && data.status === "success") {
+                    fbSuccessMsg.innerText = "Feedback submitted successfully!";
+                    feedbackForm.reset();
+                    loadFeedbacks();
+                } else {
+                    fbErrorMsg.innerText = data.message || "Failed to submit feedback";
+                }
+            } catch (error) {
+                fbErrorMsg.innerText = "Failed to communicate with Node.js server";
+            }
+        });
+    }
+
+    if (feedbackList) loadFeedbacks();
 });
