@@ -15,7 +15,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-BACKEND_URL = "http://localhost:8080"
+BACKEND_URL = "https://springboot-backend-zsqe.onrender.com"
+NODE_BACKEND_URL = "http://localhost:3000"
 
 # Headers that should NOT be forwarded to the backend
 # (they are hop-by-hop or would confuse the backend)
@@ -37,13 +38,13 @@ def get_forward_headers(request: Request) -> dict:
     return headers
 
 
-async def proxy_request(method: str, path: str, request: Request = None, data=None, params=None):
+async def proxy_request(method: str, path: str, request: Request = None, data=None, params=None, base_url: str = BACKEND_URL):
     headers = get_forward_headers(request) if request else {"Accept": "application/json"}
 
     async with httpx.AsyncClient(timeout=30.0) as client:
         backend_response = await client.request(
             method=method,
-            url=f"{BACKEND_URL}{path}",
+            url=f"{base_url}{path}",
             json=data,
             params=params,
             headers=headers,
@@ -60,6 +61,29 @@ async def proxy_request(method: str, path: str, request: Request = None, data=No
 @app.get("/health")
 async def health():
     return {"status": "ok", "service": "gateway"}
+
+
+# --- FEEDBACK ROUTES ROUTED TO NODE.JS BACKEND ---
+@app.get("/api/feedback")
+async def get_feedback(request: Request):
+    return await proxy_request("GET", "/api/feedback", request=request, base_url=NODE_BACKEND_URL)
+
+
+@app.post("/api/feedback")
+async def create_feedback(request: Request):
+    data = await request.json()
+    return await proxy_request("POST", "/api/feedback", request=request, data=data, base_url=NODE_BACKEND_URL)
+
+
+@app.put("/api/feedback/{feedback_id}")
+async def update_feedback(feedback_id: int, request: Request):
+    data = await request.json()
+    return await proxy_request("PUT", f"/api/feedback/{feedback_id}", request=request, data=data, base_url=NODE_BACKEND_URL)
+
+
+@app.delete("/api/feedback/{feedback_id}")
+async def delete_feedback(feedback_id: int, request: Request):
+    return await proxy_request("DELETE", f"/api/feedback/{feedback_id}", request=request, base_url=NODE_BACKEND_URL)
 
 
 @app.post("/api/auth/register")

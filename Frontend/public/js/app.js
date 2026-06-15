@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const API_BASE_URL = "https://springboot-backend-zsqe.onrender.com";
+    const API_BASE_URL = "http://localhost:8000";
 
     function getToken() {
         return localStorage.getItem("token");
@@ -355,7 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (courseList) fetchCourses();
 
     // --- NODE.JS FEEDBACK API INTEGRATION ---
-    const NODE_API_URL = "http://localhost:3000";
+    const NODE_API_URL = API_BASE_URL;
     const feedbackForm = document.getElementById("feedbackForm");
     const feedbackList = document.getElementById("feedbackList");
     const fbErrorMsg = document.getElementById("fbErrorMsg");

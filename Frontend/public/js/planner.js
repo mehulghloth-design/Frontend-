@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const API_BASE_URL = "https://springboot-backend-zsqe.onrender.com";
+    const API_BASE_URL = "http://localhost:8000";
 
     const courseSelect = document.getElementById("courseSelect");
     const selectedCoursesDiv = document.getElementById("selectedCourses");
