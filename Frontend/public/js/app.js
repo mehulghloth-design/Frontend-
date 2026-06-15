@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const API_BASE_URL = "http://localhost:8000";
+    const API_BASE_URL = "https://springboot-backend-zsqe.onrender.com";
 
     function getToken() {
         return localStorage.getItem("token");
