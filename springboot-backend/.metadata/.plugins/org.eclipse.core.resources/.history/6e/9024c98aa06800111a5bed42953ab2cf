@@ -1,0 +1,13 @@
+spring.application.name=backend
+
+spring.datasource.url=jdbc:postgresql://dpg-d8nnqt3bc2fs73f86u8g-a.virginia-postgres.render.com:5432/postgresdb_38xy
+spring.datasource.username=postgresdb_38xy_user
+spring.datasource.password=BzA70lLxrZOpe05mZSpyPC7V9r1Vh0Ia
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+# MongoDB configuration for logs (secondary datastore)
+spring.data.mongodb.uri=mongodb://localhost:27017/academic_planner_logs
